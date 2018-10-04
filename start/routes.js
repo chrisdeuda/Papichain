@@ -17,5 +17,12 @@
 const Route = use('Route')
 
 Route.get('/', () => {
-  return { greeting: 'Hello world in JSON' }
+  return { greeting: 'Hello Papicoin' }
 })
+
+Route.post('/start', 'BlockchainController.init')
+Route.post('/transactions/new', 'BlockchainController.create')
+Route.post('/mine', 'Blockchain@mine')
+Route.post('/chain', 'Blockchain@chain') // return the full Blockchain
+
+
