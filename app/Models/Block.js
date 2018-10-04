@@ -1,29 +1,26 @@
 'use strict'
 
 const Model = use('Model')
+const SHA256 = require("crypto-js/sha256")
 
-class Block extends Model {
+class Block {
 
-    constructor(){
-
-        this.getBlock = this.getBlock.bind(this)
+    constructor( index, timestamp, data, previousHash){
+        this.index = index
+        this.timestamp = timestamp
+        this.data = data
+        this.previousHash = previousHash
+        this.hash = Block.calculateHash();
+        this.nonce = 0
     }
 
-    getBlock(){
-        return {
-            'index': 1,
-            'timestamp': 1506057125.900785,
-            'transactions': [
-                {
-                    'sender': "8527147fe1f5426f9dd545de4b27ee00",
-                    'recipient': "a77f5cdfa2934df3954a5c7c7da5df1f",
-                    'amount': 5,
-                }
-            ],
-            'proof': 324984774000,
-            'previous_hash': "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
-        }
-    }
+    static calculateHash(){
+        var hash = SHA256( this.index + this.previousHash + this.timestamp + JSON.stringify(this.data)+ this.nonce).toString();
+        console.log(hash);
+        return hash;
+    }    
+
+    
 }
 
 module.exports = Block
