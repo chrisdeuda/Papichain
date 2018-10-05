@@ -14,13 +14,11 @@ class Block {
     }
 
      calculateHash(){
-        var hash = SHA256(  this.previousHash +
-             this.timestamp + 
-             JSON.stringify(this.transactions) +
-              this.nonce).toString();
-        return hash;
-
-        
+        return SHA256(  this.previousHash +
+            this.timestamp + 
+            JSON.stringify(this.transactions) +
+            this.nonce
+        ).toString();
     }    
 
     /**
