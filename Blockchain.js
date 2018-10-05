@@ -2,6 +2,15 @@
 
 const Block = require('./Block.js')
 
+class Transaction{
+    constructor( fromAddress, toAddress, amount) {
+        this.toAddress = toAddress;
+        this.fromAddress = fromAddress;
+        this.amount = amount;
+    }
+
+}
+
 class Blockchain {
     
     constructor(){
@@ -10,24 +19,56 @@ class Blockchain {
         // Create function for the genesis Block
         // Mining Genesis Block
         this.chain = [this.createGenesisBlock()];
-        this.difficulty = 4;
+        this.difficulty = 2;
+        this.pendingTransactions = [];
+        this.miningReward = 100;
     
         console.log("Initilized Block Success")
 
     }
 
     createGenesisBlock(){
-        return new Block(0, "01/01/2018", "Genesis block", "0");
+        return new Block( "01/01/2018", "Genesis block", "0");
     }
     getLatestBlock(){ // return the last block }
         return this.chain[ this.chain.length - 1]
     }
-    addBlock(newBlock){
-        newBlock.previousHash = this.getLatestBlock().hash;
-        newBlock.mineBlock( this.difficulty);
-        this.chain.push(newBlock);
+    // Miners can pick the transactions
+    minePendingTransactions(miningRewardAddress){
+        // Create new block with all pending transactions and mine it..
+        let block = new Block( Date.now(), this.pendingTransactions);
+        block.mineBlock(this.difficulty);
 
+        console.log("Block successfully mined !");
+        this.chain.push( block );
 
+        this.pendingTransactions = [
+            new Transaction( null, miningRewardAddress, this.miningReward)
+        ];
+
+    }
+
+    // Calculating the Address
+    createTransaction( transaction){
+        this.pendingTransactions.push(transaction);
+    }
+
+    getBalanceOfAddress( address ){
+        let balance = 0;
+        for( const block of this.chain) {
+            for( const trans of block.transactions){    
+                // Searching of the address of the user
+                // Increase the balance
+                if( trans.fromAddress === address){
+                    balance -=  trans.amount;
+                }
+                // Increase the balance
+                if ( trans.toAddress === address) {
+                    balance += trans.amount
+                }
+            }
+        }
+        return balance;
     }
     
     newBlock(proof, previousHash){
@@ -73,15 +114,5 @@ class Blockchain {
 }
 
 module.exports = Blockchain
-
-
-var BlockchainObj  = new Blockchain();
-
-console.log("Mining block 1...")
-BlockchainObj.addBlock( new Block (1, "10/07/2017", {amount: 4}));
-
-console.log("Mining block 2...")
-BlockchainObj.addBlock( new Block (2, "10/07/2037", {amount: 10}));
-
 
 //console.log( JSON.stringify(BlockchainObj, null, 4));
