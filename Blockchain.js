@@ -10,6 +10,7 @@ class Blockchain {
         // Create function for the genesis Block
         // Mining Genesis Block
         this.chain = [this.createGenesisBlock()];
+        this.difficulty = 4;
     
         console.log("Initilized Block Success")
 
@@ -23,7 +24,7 @@ class Blockchain {
     }
     addBlock(newBlock){
         newBlock.previousHash = this.getLatestBlock().hash;
-        newBlock.hash = newBlock.calculateHash();
+        newBlock.mineBlock( this.difficulty);
         this.chain.push(newBlock);
 
 
@@ -74,3 +75,13 @@ class Blockchain {
 module.exports = Blockchain
 
 
+var BlockchainObj  = new Blockchain();
+
+console.log("Mining block 1...")
+BlockchainObj.addBlock( new Block (1, "10/07/2017", {amount: 4}));
+
+console.log("Mining block 2...")
+BlockchainObj.addBlock( new Block (2, "10/07/2037", {amount: 10}));
+
+
+//console.log( JSON.stringify(BlockchainObj, null, 4));
