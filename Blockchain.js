@@ -9,25 +9,24 @@ class Blockchain {
 
         // Create function for the genesis Block
         // Mining Genesis Block
-        var newBlock =  Blockchain.genesisBlock();
-        this.chain = [newBlock];
-        this.current_transactions = []
-
-        // Binding of this
-
-        this.newBlock = this.newBlock("123", "123")
-        this.newTransactions = this.newTransactions()
-        this.lastBlock = this.lastBlock()
-        //this.proofOfWork = this.proofOfWork.bind(this)
+        this.chain = [this.createGenesisBlock()];
+    
         console.log("Initilized Block Success")
 
     }
 
-    static genesisBlock(){
+    createGenesisBlock(){
+        return new Block(0, "01/01/2018", "Genesis block", "0");
+    }
+    getLatestBlock(){ // return the last block }
+        return this.chain[ this.chain.length - 1]
+    }
+    addBlock(newBlock){
+        newBlock.previousHash = this.getLatestBlock().hash;
+        newBlock.hash = newBlock.calculateHash();
+        this.chain.push(newBlock);
 
-        var NewBlock = new Block(0, "01/01/2018", "Genesis block", "0");
-        console.log(NewBlock);
-        return NewBlock;
+
     }
     
     newBlock(proof, previousHash){
@@ -49,11 +48,25 @@ class Blockchain {
             amount: amount
         })
         console.log("New transactions", this.current_transactions)
-        return this.lastBlock('index') + 1
+        return this.getLatestBlock('index') + 1;
     }
-    
-    lastBlock(){ // return the last block }
-        return this.chain.slice(-1)[0]
+
+    isChainValid(){
+        for( let index = 1; index <this.chain.length; index++){
+            const currentBlock = this.chain[index];
+            const previousBlock = this.chain[index - 1];
+
+            // Check if the hash still valid
+            if ( currentBlock.hash !== currentBlock.calculateHash()) {
+                return false;
+            }
+            // Check if current block set to previous block hash
+            if ( currentBlock.previousHash !== previousBlock.hash )  {
+                return false;
+            }
+        }
+        return true;
+
     }
 
 }
@@ -61,4 +74,3 @@ class Blockchain {
 module.exports = Blockchain
 
 
-var BlockchainObj  = new Blockchain();
