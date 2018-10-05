@@ -34,8 +34,7 @@ module.exports = {
     connection: {
       filename: Helpers.databasePath(`${Env.get('DB_DATABASE', 'development')}.sqlite`)
     },
-    useNullAsDefault: true,
-    debug: Env.get('DB_DEBUG', false)
+    useNullAsDefault: true
   },
 
   /*
@@ -56,8 +55,7 @@ module.exports = {
       user: Env.get('DB_USER', 'root'),
       password: Env.get('DB_PASSWORD', ''),
       database: Env.get('DB_DATABASE', 'adonis')
-    },
-    debug: Env.get('DB_DEBUG', false)
+    }
   },
 
   /*
@@ -78,7 +76,6 @@ module.exports = {
       user: Env.get('DB_USER', 'root'),
       password: Env.get('DB_PASSWORD', ''),
       database: Env.get('DB_DATABASE', 'adonis')
-    },
-    debug: Env.get('DB_DEBUG', false)
+    }
   }
 }
