@@ -4,10 +4,9 @@ const SHA256 = require("crypto-js/sha256")
 
 class Block {
 
-    constructor( index, timestamp, data, previousHash){
-        this.index = index
+    constructor(timestamp, transactions, previousHash){
         this.timestamp = timestamp
-        this.data = data
+        this.transactions = transactions
         this.previousHash = previousHash
         this.hash = this.calculateHash();
         // Random value
@@ -15,8 +14,11 @@ class Block {
     }
 
      calculateHash(){
-        var hash = SHA256( this.index + this.previousHash + this.timestamp + JSON.stringify(this.data)+ this.nonce).toString();
-        return hash;
+        return SHA256(  this.previousHash +
+            this.timestamp + 
+            JSON.stringify(this.transactions) +
+            this.nonce
+        ).toString();
     }    
 
     /**
@@ -27,13 +29,14 @@ class Block {
      * @param {*} difficulty 
      */
     mineBlock(difficulty){
+        console.log("Trying to calcualate")
         // Calculate until there is a zero in the hash
-        while( this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")){
+        while (this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")) {
             this.nonce++;
-            this.hash  = this.calculateHash();
+            this.hash = this.calculateHash();
         }
-        console.log("Number of try" + this.nonce)
-        console.log("Block mined:" + this.hash);
+
+        console.log("BLOCK MINED: " + this.hash);
     }
 
     
